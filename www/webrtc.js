@@ -8,8 +8,8 @@
  */
 
 // Set this to override the automatic detection in websocketServerConnect()
-var ws_server;
-var ws_port;
+var ws_server; // = 'wss://fortune-chlorinated-sheet.glitch.me';
+var ws_port; // = '443';
 // Override with your own STUN servers if you want
 var rtc_configuration = {iceServers: [{urls: "stun:stun.l.google.com:19302"},
                                        /* TODO: do not keep these static and in clear text in production,
@@ -198,15 +198,15 @@ function Session(our_id, peer_id, closed_callback) {
         span.classList.remove('error');
         span.textContent = '';
         console.log("Our ID:", this.our_id);
-        var ws_port = ws_port || '8443';
+        ws_port = ws_port || '8443';
         if (window.location.protocol.startsWith ("file")) {
-            var ws_server = ws_server || "127.0.0.1";
+            ws_server = ws_server || "127.0.0.1";
         } else if (window.location.protocol.startsWith ("http")) {
-            var ws_server = ws_server || window.location.hostname;
+            ws_server = ws_server || window.location.hostname;
         } else {
-            throw new Error ("Don't know how to connect to the signalling server with uri" + window.location);
+            ws_server = ws_server || ("wss://" + window.location.hostname);
         }
-        var ws_url = 'ws://' + ws_server + ':' + ws_port
+        var ws_url = (ws_server.indexOf('://') < 0 ? 'ws://' : '') + ws_server + ':' + ws_port
         this.setStatus("Connecting to server " + ws_url);
         this.ws_conn = new WebSocket(ws_url);
         /* When connected, immediately register with the server */
@@ -396,16 +396,16 @@ function onServerError(event) {
 };
 
 function connect() {
-    var ws_port = ws_port || '8443';
+    ws_port = ws_port || '8443';
     if (window.location.protocol.startsWith ("file")) {
-        var ws_server = ws_server || "127.0.0.1";
+        ws_server = ws_server || "127.0.0.1";
     } else if (window.location.protocol.startsWith ("http")) {
-        var ws_server = ws_server || window.location.hostname;
+        ws_server = ws_server || window.location.hostname;
     } else {
-        throw new Error ("Don't know how to connect to the signalling server with uri" + window.location);
+        ws_server = ws_server || ("wss://" + window.location.hostname);
     }
-    var ws_url = 'ws://' + ws_server + ':' + ws_port
-    console.log("Connecting listener");
+    var ws_url = (ws_server.indexOf('://') < 0 ? 'ws://' : '') + ws_server + ':' + ws_port
+    console.log("Connecting listener", ws_url);
     ws_conn = new WebSocket(ws_url);
     ws_conn.addEventListener('open', (event) => {
         ws_conn.send('REGISTER LISTENER');
