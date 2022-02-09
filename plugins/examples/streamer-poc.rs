@@ -107,8 +107,11 @@ async fn run(args: Args) -> Result<(), Error> {
     let addr = "127.0.0.1:8484".to_string();
 
     let signaller_address = 
-        "wss://fortune-chlorinated-sheet.glitch.me/ws".to_string(); 
-        //"ws://127.0.0.1:8443".to_string();
+        //"wss://fortune-chlorinated-sheet.glitch.me/ws".to_string(); 
+        "ws://127.0.0.1:8443".to_string();
+
+    let video_prefs = "video/x-h264";
+    let audio_prefs = "audio/x-opus";
 
     // Create the event loop and TCP listener we'll accept connections on.
     let try_socket = TcpListener::bind(&addr).await;
@@ -129,7 +132,8 @@ async fn run(args: Args) -> Result<(), Error> {
     }
 
     let webrtcsink_string = format!(
-        "webrtcsink name=ws do-retransmission={} do-fec={} congestion-control={} signaller::address={} video-caps=video/x-h264 audio-caps=audio/x-opus",
+        "webrtcsink name=ws do-retransmission={} do-fec={} congestion-control={} signaller::address={} video-caps={} audio-caps={}", 
+        //" stun-server={} turn-server={} min-bitrate={} max-bitrate={}",
         !args.disable_retransmission,
         !args.disable_fec,
         if args.disable_congestion_control {
@@ -137,7 +141,9 @@ async fn run(args: Args) -> Result<(), Error> {
         } else {
             "homegrown"
         },
-        signaller_address
+        signaller_address,
+        video_prefs,
+        audio_prefs
     );
 
     let mut video_only = false;
