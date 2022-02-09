@@ -8,9 +8,9 @@
  */
 
 // Set this to override the automatic detection in websocketServerConnect()
-var ws_server; // = 'wss://fortune-chlorinated-sheet.glitch.me';
-var ws_port; // = '443';
-var ws_path = ''; //'/ws';
+var ws_server = 'wss://fortune-chlorinated-sheet.glitch.me';
+var ws_port = '443';
+var ws_path = '/ws';
 
 // Override with your own STUN servers if you want
 var rtc_configuration = {iceServers: [{urls: "stun:stun.l.google.com:19302"},

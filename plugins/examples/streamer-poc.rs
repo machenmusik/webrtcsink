@@ -107,8 +107,8 @@ async fn run(args: Args) -> Result<(), Error> {
     let addr = "127.0.0.1:8484".to_string();
 
     let signaller_address = 
-        //"wss://fortune-chlorinated-sheet.glitch.me/ws".to_string(); 
-        "ws://127.0.0.1:8443".to_string();
+        "wss://fortune-chlorinated-sheet.glitch.me/ws".to_string(); 
+        //"ws://127.0.0.1:8443".to_string();
 
     let video_prefs = "video/x-h264";
     let audio_prefs = "audio/x-opus";
