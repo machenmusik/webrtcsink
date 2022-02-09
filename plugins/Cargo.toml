@@ -26,6 +26,7 @@ serde = "1"
 serde_derive = "1"
 serde_json = "1"
 fastrand = "1.0"
+httparse = "1.6.0"
 
 [dev-dependencies]
 tracing = { version = "0.1", features = ["log"] }

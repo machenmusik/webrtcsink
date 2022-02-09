@@ -11,6 +11,8 @@ use gst::{gst_debug, gst_error, gst_info, gst_trace, gst_warning};
 use once_cell::sync::Lazy;
 use serde_derive::{Deserialize, Serialize};
 use std::sync::Mutex;
+use httparse::Request;
+use httparse::Header;
 
 static CAT: Lazy<gst::DebugCategory> = Lazy::new(|| {
     gst::DebugCategory::new(
@@ -85,7 +87,16 @@ impl Signaller {
             .unwrap()
             .clone();
 
-        let (ws, _) = async_tungstenite::async_std::connect_async(address).await?;
+        // TODO: make this connect properly to websocket URL with path, through proxy with Host header.
+        let mut headers = [
+            // https://support.glitch.com/t/error-502-when-connecting-to-my-projects-websocket/12335/9
+            httparse::Header{name:"User-Agent", value:b"webrtcsink-signaller"}
+        ];
+        let mut req = httparse::Request::new(&mut headers);
+        req.method = Some("GET");
+        req.path = Some(&address);
+        req.version = Some(1u8);
+        let (ws, _) = async_tungstenite::async_std::connect_async(req).await?;
 
         gst_info!(CAT, obj: element, "connected");
 
