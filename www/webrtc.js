@@ -8,8 +8,10 @@
  */
 
 // Set this to override the automatic detection in websocketServerConnect()
-var ws_server; // = 'wss://fortune-chlorinated-sheet.glitch.me';
-var ws_port; // = '443';
+var ws_server;
+var ws_port;
+var ws_path = '';
+
 // Override with your own STUN servers if you want
 var rtc_configuration = {iceServers: [{urls: "stun:stun.l.google.com:19302"},
                                        /* TODO: do not keep these static and in clear text in production,
@@ -206,7 +208,7 @@ function Session(our_id, peer_id, closed_callback) {
         } else {
             ws_server = ws_server || ("wss://" + window.location.hostname);
         }
-        var ws_url = (ws_server.indexOf('://') < 0 ? 'ws://' : '') + ws_server + ':' + ws_port
+        var ws_url = (ws_server.indexOf('://') < 0 ? 'ws://' : '') + ws_server + ':' + ws_port + ws_path;
         this.setStatus("Connecting to server " + ws_url);
         this.ws_conn = new WebSocket(ws_url);
         /* When connected, immediately register with the server */
@@ -404,7 +406,7 @@ function connect() {
     } else {
         ws_server = ws_server || ("wss://" + window.location.hostname);
     }
-    var ws_url = (ws_server.indexOf('://') < 0 ? 'ws://' : '') + ws_server + ':' + ws_port
+    var ws_url = (ws_server.indexOf('://') < 0 ? 'ws://' : '') + ws_server + ':' + ws_port + ws_path;
     console.log("Connecting listener", ws_url);
     ws_conn = new WebSocket(ws_url);
     ws_conn.addEventListener('open', (event) => {
